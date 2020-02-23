@@ -21,7 +21,7 @@
   "scripts": {
     "start": "NODE_PATH=src/ react-scripts start",
     "build": "NODE_PATH=src/ react-scripts build",
-    "test": "NODE_PATH=src/ react-scripts test"
+    "test": "NODE_PATH=src/ cross-env CI=true react-scripts test --env=jsdom"
   },
   "eslintConfig": {
     "extends": "react-app"
