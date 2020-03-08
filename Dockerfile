@@ -1,16 +1,25 @@
-# base image
-FROM node:12.2.0-alpine
+FROM node:10.19.0
 
-# set working directory
+# for caching optimisations
+COPY package*.json /
+RUN npm install
+# required to serve the react app on the live server
+RUN npm install -g serve
+
+COPY . /app
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+# noop files for non python projects and local development
+RUN echo "#!/bin/bash" > /app/migrate.sh && chmod +x /app/migrate.sh
+RUN echo "#!/bin/bash" > /usr/local/bin/start && chmod +x /usr/local/bin/start
 
-# install and cache app dependencies
-COPY package.json /app/package.json
-RUN npm install --silent
-RUN npm install react-scripts@3.0.1 -g --silent
+ENV PATH=/node_modules/.bin:$PATH
+ENV PORT=80
+ENV HOST=0.0.0.0
+ENV BROWSER='none'
 
-# start app
-CMD ["npm", "start"]
+RUN npm run build
+
+EXPOSE 80
+
+CMD ["serve", "-s", "build", "-l", "80"]
