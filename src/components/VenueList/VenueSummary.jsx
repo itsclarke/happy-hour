@@ -13,8 +13,12 @@ class VenueSummary extends Component {
 
   toggleHeart = e => {
     e.preventDefault();
-    const { loved } = this.props;
-    this.props.saveFavorite(this.props.venue, !loved);
+    const { loved, loggedIn } = this.props;
+    if (loggedIn) {
+      this.props.saveFavorite(this.props.venue, !loved);
+    } else {
+      alert('Please login to save favorites');
+    }
   };
 
   render() {
